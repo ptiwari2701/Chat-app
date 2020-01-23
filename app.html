@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <style>
+         @-webkit-keyframes AnimationName {
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+         }
+         @-moz-keyframes AnimationName {
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+         }
+         @keyframes AnimationName { 
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+         }
+        .class{
+          background: linear-gradient(270deg, #05a0f7, #06f74f);
+            background-size: 400% 400%;
+
+         -webkit-animation: AnimationName 4s ease infinite;
+         -moz-animation: AnimationName 4s ease infinite;
+         animation: AnimationName 4s ease infinite;
+         }
+         #leftbox { 
+                overflow: auto;
+                float:left;  
+                background:Red; 
+                width:25%; 
+                height:65%; 
+                position: absolute;
+                left: 25%;
+                top:25%;
+                border: 5px black;
+                /* border-top-left-radius: 25px; */
+                /* border-bottom-left-radius: 25px; */
+            }
+            #rightbox{
+               overflow:auto;
+                float:right; 
+                background:blue; 
+                width:25%; 
+                position: absolute;
+                height:60%;
+                left: 50%; 
+                top: 25%;
+                border: 5px black;
+                border-top-right-radius: 25px;         
+               } 
+            #messages{
+                background:grey; 
+                position: absolute;
+                width: 25%;
+                left: 50%;
+                height:5%;
+                top:85%;
+                border: 5px black;
+                border-bottom-right-radius: 69px;
+            }
+            #umessages{
+                background:grey; 
+                position: absolute;
+                width: 25%;
+                left: 50%;
+                height:5%;
+                top:85%;
+                border: 5px black;
+                border-bottom-right-radius: 69px;
+            }
+            #button{
+               border-bottom-right-radius: 25px;
+               outline: none;
+            }
+            #ubutton{
+               border-bottom-right-radius: 25px;
+               outline: none;
+            }
+            #start{
+               text-align: center;
+                float:right; 
+                background:blueviolet; 
+                width:25%; 
+                position: absolute;
+                height:65%;
+                left: 50%; 
+                top: 25%;
+                border: 5px black;
+                border-top-right-radius: 25px;
+            }
+      </style>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+   </head>
+   <script src = "/socket.io/socket.io.js"></script>
+   <script>
+      var socket = io();
+      var userId=0;
+      var specificuser;
+      var divId=0;
+      function sort(text) {
+         return text.split('').sort().join('');
+      };
+      function setUsername() {
+         socket.emit('setUsername');
+      };
+      socket.on('userExists', function(data) {
+         alert(data);
+      });
+      socket.on('userSet', function(data,id,msg) {
+         console.log(data.user);
+         console.log(id);
+         user=data.username;
+         document.getElementById('error').innerHTML = "";
+         var btn=document.createElement("button");
+         btn.setAttribute("style","height:10%;width:100%;background-color:#83f0a4");
+         btn.setAttribute("id",id-1);
+         btn.innerHTML=data.username;
+         document.getElementById("leftbox").appendChild(btn);
+         btn.addEventListener("click",function(){
+            userId=this.id;
+            console.log(userId);
+         });
+         var brk=document.createElement("br");
+         document.getElementById("leftbox").appendChild(brk);
+         autolScroll();
+          document.getElementById('newmsg').innerHTML="";
+             for(var i=0;i<msg.length;i++){
+             document.getElementById('newmsg').innerHTML += '<div><b>' + 
+                msg[i].user + '</b>: ' + msg[i].message + '</div>'
+         }
+         autoScroll();
+         console.log(user);
+         console.log(id);
+      });
+      console.log();
+      socket.on('redirect',function(data){
+         alert("user already exists enter another");
+         console.log(data);
+         window.history.back();
+      });
+      socket.on("allUser",function(data){
+          document.getElementById("leftbox").innerHTML="";
+          var common=document.createElement("button");
+          common.innerHTML="Common Chat Room";
+         common.setAttribute("id","common");
+         common.setAttribute("style","height:10%;width:100%;background-color:#83f0a4");
+         document.getElementById('leftbox').appendChild(common);
+         common.addEventListener("click",function(){
+            document.getElementById("messages").style.zIndex=1;
+            document.getElementById("umessages").style.zIndex=-1;
+            document.getElementById("uspecificmsg").style.display="none";
+            document.getElementById("newmsg").style.display="block";
+            document.getElementById("start").style.display="none";
+            document.getElementById("rightbox").style.display="block";
+            document.getElementById("messages").style.display="block";
+         });
+         for(var j=0;j<data.user.length;j++){
+            var div =document.createElement("div");
+            div.setAttribute("id",i);
+            div.setAttribute("style","overflow:auto");
+            document.getElementById("rightbox").appendChild(div);
+         }
+         console.log(user);
+          for(var i=0;i<data.user.length;i++){
+         var btn=document.createElement("button");
+         btn.setAttribute("style","height:10%;width:100%;background-color:#83f0a4");
+         btn.setAttribute("id",i);
+         btn.innerHTML=data.user[i];
+         document.getElementById("leftbox").appendChild(btn);
+         btn.addEventListener("click",function(){
+            document.getElementById("messages").style.zIndex=-1;
+            document.getElementById("umessages").style.zIndex=1;
+            document.getElementById("newmsg").style.display="none";
+            document.getElementById("start").style.display="none";
+            document.getElementById("rightbox").style.display="block";
+            document.getElementById("uspecificmsg").style.display="block";
+            document.getElementById("messages").style.display="block";
+            userId=this.id;
+            specificuser=btn.innerHTML;
+            console.log(specificuser);
+            console.log(userId);
+            var uspecific=document.createElement("div");
+            uspecific.setAttribute("style","overflow:auto;display:block;");
+            var uid=user+data.user[userId];
+            uid=sort(uid);
+            divId=uid;
+            console.log(uid);
+            uspecific.setAttribute("id",uid);
+            document.getElementById("uspecificmsg").appendChild(uspecific);
+         });
+         var brk=document.createElement("br");
+         document.getElementById("leftbox").appendChild(brk);
+         }
+      });
+      function sendMessage() {
+         var msg = document.getElementById('msg').value;
+         console.log(msg);
+         if(msg) {
+            document.getElementById("msg").value="";
+            socket.emit('msg', {message: msg, user: user});
+         }
+      }
+      function usendMessage(){
+         var msg=document.getElementById('umsg').value;
+         if(msg){
+            document.getElementById('umsg').value="";
+            socket.emit('umsg',{message:msg,user:user,specificuser:specificuser,divId:divId});
+         }
+      }
+      socket.on('newmsg', function(data,id) {
+         if(user) {
+            autoScroll();
+            console.log(data);
+            document.getElementById('newmsg').innerHTML += '<div><b>' + 
+               data.user + '</b>: ' + data.message + '</div>'
+      }
+      });
+      socket.on('unewmsg',function(data){
+         autoScroll();
+         document.getElementById(data.divId).innerHTML+='<div><b>' + 
+               data.user + '</b>: ' + data.message + '</div>'
+      });
+      function autolScroll(){
+         $('#leftbox').animate({
+            scrollTop: $('#leftbox').get(0).scrollHeight
+        }, 2000);
+      }
+      function autoScroll(){ 
+        $('#rightbox').animate({
+            scrollTop: $('#rightbox').get(0).scrollHeight
+        }, 2000);
+    }
+    function send(){
+    var input=document.getElementById('msg');
+    console.log(input);
+    input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+         event.preventDefault();
+         document.getElementById("button").click();
+      }
+      });
+   }
+    setUsername();
+   </script>
+   
+   <body class="class">
+      <div id = "error"></div>
+      <span id="span">
+      <div id="leftbox"></div>
+      <div id="start">
+         <b>Welcome</b>
+      </div>
+      <div id="rightbox" style="display: none">
+         <div id="uspecificmsg" style="overflow:auto;display: none"></div>
+         <div id="newmsg" style="overflow:auto;display: none"></div>
+      </div>
+      <div id="messages" style="display:none;z-index:-1;">
+         <input type = "text" id="msg" value="" style="width:85%;height:85%;" onclick="send()">
+         <button type = "submit" id="button" name = "button" onclick = "sendMessage()" style="position: absolute;float:right;height:100%;">Send</button>
+   </div>
+   <div id="umessages" style="display:none;z-index:1;">
+         <input type = "text" id="umsg" value="" style="width:85%;height:85%;">
+         <button type = "submit" id="ubutton" name = "button" onclick = "usendMessage()" style="position: absolute;float:right;height:100%;">Send</button>
+   </div>
+   </span>
+   </body>
+</html>

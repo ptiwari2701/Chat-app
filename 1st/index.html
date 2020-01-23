@@ -1,0 +1,89 @@
+<html>
+<head>
+    <script src = "/socket.io/socket.io.js"></script>
+    <style>
+        @-webkit-keyframes AnimationName {
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+         }
+         @-moz-keyframes AnimationName {
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+         }
+         @keyframes AnimationName { 
+            0%{background-position:0% 50%}
+            50%{background-position:100% 50%}
+            100%{background-position:0% 50%}
+         }
+        .class{
+          background: linear-gradient(270deg, #05a0f7, #06f74f);
+            background-size: 400% 400%;
+
+         -webkit-animation: AnimationName 4s ease infinite;
+         -moz-animation: AnimationName 4s ease infinite;
+         animation: AnimationName 4s ease infinite;
+         }
+        body{
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    background-position: center;
+    font-family: sans-serif;
+}
+.login-box{
+    border-radius: 5%;
+    width: 40%px;
+    height: 30%px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    box-sizing: border-box;
+    padding: 5% 5%;
+}
+.login-box p{
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+.login-box input{
+    width: 100%;
+    margin-bottom: 1%;
+}
+.login-box input[type="submit"]
+{
+    border: none;
+    outline: none;
+    height: 40px;
+    background: #1c8adb;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 20px;
+}
+.login-box input[type="submit"]:hover
+{
+    cursor: pointer;
+    background: #39dc79;
+    color: #000;
+}
+    </style>
+</head>
+<script>
+</script>
+    <body class="class">
+    <div class="login-box">
+            <form action="/app.html" method="post"> 
+            <p>Username</p>
+            <br>
+            <input type="text" id="username" name="username" placeholder="Enter Username">
+            <br><br>
+            <input type="submit" value="Enter Chat Room">   
+            </form>
+        </div>
+    
+    </body>
+</html>
